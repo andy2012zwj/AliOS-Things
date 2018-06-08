@@ -627,7 +627,7 @@ static size_t udata_ps_service_process_cb(sensor_tag_e tag, void *pdata)
     proximity_data_t *ps =  (proximity_data_t *)pdata;
     size_t len = sizeof(proximity_data_t);
 
-    LOG("%s udata_ps_service_cb = (%d), (%d), (%d)\n",uDATA_STR, tag, ps->present, ps->timestamp);
+    LOG("%s udata_ps_service_cb = (%d), (%d), (%d)\n", uDATA_STR, tag, ps->present, ps->timestamp);
     return len;
 }
 
@@ -769,9 +769,10 @@ int service_process_init(void)
         ret = abs_data_check_dev_tree(g_udata_service[i].sensor_tag);
         if (true != ret) {
 
-            LOG("%s %s %d no drv for udata_service %d \n", uDATA_STR, __func__, __LINE__, g_udata_service[i].sensor_tag);
             continue;
         }
+        
+        LOG("%s %s %d get drv for udata_service %d \n", uDATA_STR, __func__, __LINE__, g_udata_service[i].sensor_tag);
 
         if (NULL !=  g_udata_service[i].service_func) {
 
