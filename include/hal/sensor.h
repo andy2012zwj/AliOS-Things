@@ -81,6 +81,7 @@ typedef enum {
     TAG_DEV_HUMI,       /* Humidity */
     TAG_DEV_HALL,       /* HALL */
     TAG_DEV_HR,         /* Heart Rate */
+    TAG_DEV_FORCE,      /* Force sensor */
     TAG_DEV_GPS,
     TAG_DEV_SENSOR_NUM_MAX,
 } sensor_tag_e;
@@ -139,6 +140,7 @@ typedef enum {
     permillage,
     bpm,
     dCelsius,
+    mN,
 } value_unit_e;
 
 
@@ -192,6 +194,12 @@ typedef struct _dev_proximity_data_t {
     uint64_t timestamp;
     uint32_t  present;
 } proximity_data_t;
+
+typedef struct _dev_force_data_t {
+    uint64_t timestamp;
+    uint32_t  f;
+} force_data_t;
+
 
 typedef struct _dev_hall_data_t {
     uint64_t timestamp;

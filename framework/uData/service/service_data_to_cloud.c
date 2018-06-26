@@ -54,6 +54,7 @@ service_pub_info_t g_service_info[UDATA_MAX_CNT] = {
     { TAG_DEV_HUMI,             UDATA_SERVICE_HUMI,         0,  DTC_PUBLISH_CYCLE_DEFAULT,  false,    DTC_PARA_NUM_1, NULL},
     { TAG_DEV_HALL,             UDATA_SERVICE_HALL,         0,  DTC_PUBLISH_CYCLE_DEFAULT,  false,    DTC_PARA_NUM_1, NULL},
     { TAG_DEV_HR,               UDATA_SERVICE_HR,           0,  DTC_PUBLISH_CYCLE_DEFAULT,  false,    DTC_PARA_NUM_1, NULL},
+    { TAG_DEV_FORCE,            UDATA_SERVICE_FORCE,        0,  DTC_PUBLISH_CYCLE_DEFAULT,  false,    DTC_PARA_NUM_1, NULL},
 
     { TAG_DEV_SENSOR_NUM_MAX,   UDATA_SERVICE_PEDOMETER,    0,  DTC_PUBLISH_CYCLE_DEFAULT,  false,    DTC_PARA_NUM_1, NULL},
     { TAG_DEV_SENSOR_NUM_MAX,   UDATA_SERVICE_PDR,          0,  DTC_PUBLISH_CYCLE_DEFAULT,  false,    DTC_PARA_NUM_1, NULL},
@@ -524,6 +525,45 @@ static int service_dtc_heart_publish(udata_type_e type, void *data)
     return ret;
 }
 
+
+
+static int service_dtc_force_publish(udata_type_e type, void *data)
+{
+    int ret;
+    int len = 0;
+    force_data_t *force;
+    char smcc_msg_pub[SERVICE_PUB_VALUE_LEN];
+
+    if (type > UDATA_MAX_CNT) {
+        UDATA_ERROR(type, data, 0);
+        return -1;
+    }
+
+    if (NULL ==  data) {
+        UDATA_ERROR(type, data, 0);
+        return -1;
+    }
+
+    if (type != g_service_info[type].type) {
+
+        UDATA_ERROR(type, data, g_service_info[type].type);
+        return -1;
+    }
+
+    force = (force_data_t *)data;
+    len = snprintf((void *)&smcc_msg_pub[0], sizeof(smcc_msg_pub), "%d", force->f/1000);
+    ret = service_dtc_data_set((g_service_info[type].name_addr), NULL, (void *)&smcc_msg_pub[0]);
+    if (0 !=  ret) {
+        UDATA_ERROR(type, data, ret);
+        return -1;
+    }
+
+    ret = service_dtc_data_post(g_service_info[type].name_addr);
+
+    return ret;
+}
+
+
 static int service_dtc_gps_publish(udata_type_e type, void *data)
 {
     int ret;
@@ -664,6 +704,15 @@ static int service_dtc_publish(udata_type_e type, void *pdata)
             }
             break;
         }
+        
+        case UDATA_SERVICE_FORCE: {
+            ret = service_dtc_heart_publish(type, pdata);
+            if (ret < 0) {
+                return;
+            }
+            break;
+        }
+        
         case UDATA_SERVICE_GPS: {
             ret = service_dtc_gps_publish(type, pdata);
             if (ret < 0) {
@@ -1006,6 +1055,13 @@ int service_dtc_default_name_init(udata_type_e type)
             name_num = DTC_PARA_NUM_1;
             char* heart[DTC_PARA_NUM_1] = {"Heart_rate"};
             ret = service_dtc_name_set(type, heart, name_num);
+            break;
+        }
+        
+        case UDATA_SERVICE_FORCE: {
+            name_num = DTC_PARA_NUM_1;
+            char* force[DTC_PARA_NUM_1] = {"Force"};
+            ret = service_dtc_name_set(type, force, name_num);
             break;
         }
 

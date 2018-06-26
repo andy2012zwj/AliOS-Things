@@ -280,6 +280,11 @@ void uData_report_demo(input_event_t *event, void *priv_data)
                 UDATA_SHOW_UINT_1(buf.type, heart->timestamp, heart->hear_rate);
                 break;
             }
+            case UDATA_SERVICE_FORCE: {
+                force_data_t *force = (force_data_t *)buf.payload;
+                UDATA_SHOW_UINT_1(buf.type, force->timestamp, force->f);
+                break;
+            }
 
             case UDATA_SERVICE_GPS: {
                 gps_data_t *gps = (gps_data_t *)buf.payload;

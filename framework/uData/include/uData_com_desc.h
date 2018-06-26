@@ -50,6 +50,7 @@ typedef enum
  UDATA_SERVICE_HUMI,        /* Humidity */
  UDATA_SERVICE_HALL,        /* HALL sensor */
  UDATA_SERVICE_HR,          /* Heart Rate sensor */
+ UDATA_SERVICE_FORCE,       /* Force sensor */
  UDATA_SERVICE_PEDOMETER,   
  UDATA_SERVICE_PDR,     
  UDATA_SERVICE_VDR,
