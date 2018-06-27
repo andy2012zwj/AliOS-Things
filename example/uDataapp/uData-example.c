@@ -66,7 +66,7 @@ do{\
 }while(0);
 
 #ifdef DATA_TO_CLOUD
-
+// comments
 static int linkkit_started = 0;
 static int awss_running = 0;
 extern int linkkit_app(void);
