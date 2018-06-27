@@ -267,7 +267,8 @@ static int drv_humi_bosch_bme280_get_cali_parm(i2c_dev_t* drv)
 static int drv_humi_bosch_bme280_soft_reset(i2c_dev_t* drv)
 {
     int ret = 0;
-    ret = sensor_i2c_write(drv, BME280_RESET_ADDR, BME280_SOFT_RESET, I2C_DATA_LEN, I2C_OP_RETRIES);
+    uint8_t value = BME280_SOFT_RESET;
+    ret = sensor_i2c_write(drv, BME280_RESET_ADDR, &value, I2C_DATA_LEN, I2C_OP_RETRIES);
     if(unlikely(ret)){
         return -1;
     }

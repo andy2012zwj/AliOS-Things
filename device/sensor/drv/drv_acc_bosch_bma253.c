@@ -202,7 +202,8 @@ i2c_dev_t bma253_ctx = {
 static int drv_acc_bosch_bma253_soft_reset(i2c_dev_t* drv)
 {
     int ret = 0;
-    ret = sensor_i2c_write(drv, BMA253_RST_ADDR, BMA253_ENABLE_SOFT_RESET_VALUE, I2C_DATA_LEN, I2C_OP_RETRIES);
+    uint8_t value = BMA253_ENABLE_SOFT_RESET_VALUE;
+    ret = sensor_i2c_write(drv, BMA253_RST_ADDR, &value, I2C_DATA_LEN, I2C_OP_RETRIES);
     if(unlikely(ret)){
         return -1;
     }
