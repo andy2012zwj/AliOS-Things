@@ -115,11 +115,6 @@ int abs_data_dev_enable(sensor_tag_e tag)
 {
     int ret = 0;
 
-
-    if (abs_data_get_timer_status()) {
-        return 0;
-    }
-
     ret = aos_timer_start(&g_abs_data_timer);
     if (unlikely(ret)) {
         return -1;
@@ -130,9 +125,7 @@ int abs_data_dev_enable(sensor_tag_e tag)
 int abs_data_dev_disable(sensor_tag_e tag)
 {
     int ret = 0;
-    if (!abs_data_get_timer_status()) {
-        return 0;
-    }
+
     ret = aos_timer_stop(&g_abs_data_timer);
     if (unlikely(ret)) {
         return -1;
@@ -405,10 +398,13 @@ int abs_data_ioctl(sensor_tag_e tag, void *config)
         //    return -1;
         //}
         //return 0;
+    } else {
+        arg = &sensor_config->info;
     }
 
     ret = aos_ioctl(g_sensor_node[tag].fd, sensor_config->config.id, arg);
-    if (ret <= 0) {
+    if (ret < 0) {
+        LOG(" %s %s %d\n", __func__, ERROR_LINE, __LINE__);
         return -1;
     }
     return 0;

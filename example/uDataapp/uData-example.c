@@ -301,6 +301,34 @@ void uData_report_demo(input_event_t *event, void *priv_data)
     }
 }
 
+
+int sensor_self_test(void)
+{
+    int ret = 0;
+    dev_sensor_full_info_t test;
+
+    (void)abs_data_dev_disable(TAG_DEV_ACC);
+    memset(&test,0,sizeof(test));
+
+    test.config.id =   SENSOR_IOCTL_SELF_TEST;
+    ret = abs_data_ioctl(TAG_DEV_ACC,&test);
+    if((ret < 0) || (0 == test.info.data[0])){
+        printf("self test fail\n");
+        ret = -1;
+    }
+    else{
+        printf("self test success\n");
+        ret = 0;
+    }
+    printf("abs_data_ioctl ret ============%d  %d %d %d\n",ret,test.info.data[0],test.info.data[1],test.info.data[2]);
+
+    (void)abs_data_dev_enable(TAG_DEV_ACC);
+
+    return ret;
+
+}
+
+
 int udata_sample(void)
 {
     int ret = 0;

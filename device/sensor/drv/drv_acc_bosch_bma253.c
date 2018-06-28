@@ -180,6 +180,14 @@
 #define BMA253_LOW_POWER_MODE_MSK          (0x40)
 #define BMA253_LOW_POWER_MODE_REG          BMA253_LOW_NOISE_CTRL_ADDR
 
+#define BMA253_SELF_TEST_SIGN_POSITIVE(n)   ((n) | 0X4)
+#define BMA253_SELF_TEST_SIGN_NEGTIVE(n)    ((n) & (~0X4))
+#define BMA253_SELF_TEST_X_AXIS(n)          (((n) & (~0X3)) | (0X1))
+#define BMA253_SELF_TEST_Y_AXIS(n)          (((n) & (~0X3)) | (0X2))
+#define BMA253_SELF_TEST_Z_AXIS(n)          (((n) & (~0X3)) | (0X3))
+#define BMA253_SELF_TEST_DISABLE(n)         ((n) & (~0X3))
+
+
 #define BMA253_DEFAULT_ODR_100HZ          (100)
 
 //bma253 sensitivity factor table, the unit is LSB/g
@@ -192,12 +200,25 @@ static uint32_t current_factor = 0;
 #define BMA253_SET_BITSLICE(regvar, bitname, val)\
 ((regvar & ~bitname##_MSK) | ((val<<bitname##_POS)&bitname##_MSK))
 
+typedef enum _bma253_self_test_type_{
+    en_bma253_test_disable,
+    en_bma253_test_x,
+    en_bma253_test_y,
+    en_bma253_test_z,
+    en_bma253_test_invalid,
+}bma253_self_test_type;
+    
+
+
 i2c_dev_t bma253_ctx = {
-    .port = 1,
+    .port = 3,
     .config.address_width = 8,
     .config.freq = 400000,
     .config.dev_addr = BMA253_I2C_ADDR,
 };
+
+uint32_t  g_bma253_range = ACC_RANGE_8G;
+static int drv_acc_bosch_bma253_self_test(i2c_dev_t* drv,int32_t* data);
 
 static int drv_acc_bosch_bma253_soft_reset(i2c_dev_t* drv)
 {
@@ -384,6 +405,8 @@ static int drv_acc_bosch_bma253_set_range(i2c_dev_t* drv, uint32_t range)
         current_factor = bma253_factor[range];
     }
     
+    g_bma253_range = range;
+    
     return 0;
 }
 
@@ -462,7 +485,7 @@ static int drv_acc_bosch_bma253_read(void *buf, size_t len)
 static int drv_acc_bosch_bma253_ioctl(int cmd, unsigned long arg)
 {
     int ret = 0;
-    
+    dev_sensor_info_t *info = (dev_sensor_info_t *)arg;
     switch(cmd){
         case SENSOR_IOCTL_ODR_SET:{
             ret = drv_acc_bosch_bma253_set_odr(&bma253_ctx, arg);
@@ -484,18 +507,173 @@ static int drv_acc_bosch_bma253_ioctl(int cmd, unsigned long arg)
         }break;
         case SENSOR_IOCTL_GET_INFO:{ 
             /* fill the dev info here */
-            dev_sensor_info_t *info = (dev_sensor_info_t *)arg;
             info->model = "BMA253";
             info->range_max = 16;
             info->range_min = 2;
             info->unit = mg;
         }break;
-       
+        
+        case SENSOR_IOCTL_SELF_TEST:{
+            ret = drv_acc_bosch_bma253_self_test(&bma253_ctx, info->data);
+            printf("%d   %d   %d\n",info->data[0],info->data[1],info->data[2]);
+            return ret;
+        }
+
        default:break;
     }
 
     return 0;
 }
+
+
+static int drv_acc_bosch_bma253_self_test_axias(i2c_dev_t* drv,bma253_self_test_type type,int32_t* result)
+{
+    int ret;
+    char value = 0;
+    accel_data_t acc_data1;
+    accel_data_t acc_data2;
+    uint32_t range = g_bma253_range;
+    char test_name[32] = {0};
+    *result = 0;
+    
+    if(type >= en_bma253_test_invalid){
+        return -1;
+    }
+
+    switch(type){
+        case en_bma253_test_x:{
+            value = BMA253_SELF_TEST_X_AXIS(value);
+            break;
+        }
+        case en_bma253_test_y:{
+            value = BMA253_SELF_TEST_Y_AXIS(value);
+            break;
+        }
+        case en_bma253_test_z:{
+            value = BMA253_SELF_TEST_Z_AXIS(value);
+            break;
+        }
+        default:{
+            
+            return -1;
+        }
+    }
+
+    value = BMA253_SELF_TEST_SIGN_POSITIVE(value);
+    
+    ret = sensor_i2c_write(drv, BMA253_SELFTEST_ADDR, &value, I2C_DATA_LEN, I2C_OP_RETRIES);
+    if(unlikely(ret)){
+        return -1;
+    }
+    
+    aos_msleep(1000);
+
+    ret = drv_acc_bosch_bma253_read(&acc_data1,sizeof(acc_data1));
+    if(ret <= 0){
+        return -1;
+    }
+
+    value = BMA253_SELF_TEST_SIGN_NEGTIVE(value);
+
+    ret = sensor_i2c_write(drv, BMA253_SELFTEST_ADDR, &value, I2C_DATA_LEN, I2C_OP_RETRIES);
+    if(unlikely(ret)){
+        return -1;
+    }
+    
+    aos_msleep(1000);
+    ret = drv_acc_bosch_bma253_read(&acc_data2,sizeof(acc_data2));
+    if(ret <= 0){
+        return -1;
+    }
+
+    switch(type){
+        
+        case en_bma253_test_x:{
+            *result = acc_data1.data[0] - acc_data2.data[0];
+            printf("x_axis(%d) = (%d) - (%d)\n",*result ,acc_data1.data[0],acc_data2.data[0]);
+            if(*result < 500){
+                return -1;
+            }
+            break;
+        }
+        case en_bma253_test_y:{
+            *result = acc_data1.data[1] - acc_data2.data[1];
+            printf("y_axis(%d) = (%d) - (%d)\n",*result ,acc_data1.data[1],acc_data2.data[1]);
+            if(*result < 500){
+                return -1;
+            }
+            break;
+        }
+        case en_bma253_test_z:{
+            *result = acc_data1.data[2] - acc_data2.data[2];
+            printf("z_axis(%d) = (%d) - (%d)\n",*result ,acc_data1.data[2],acc_data2.data[2]);
+            if(*result < 500){
+                return -1;
+            }
+            break;
+        }
+        default:return -1;
+    }
+    
+    return 0;
+}
+
+
+
+static int drv_acc_bosch_bma253_self_test_disable(i2c_dev_t* drv)
+{
+    int ret;
+    char value = 0;
+    
+    value = BMA253_SELF_TEST_DISABLE(value);
+    
+    ret = sensor_i2c_write(drv, BMA253_SELFTEST_ADDR, &value, I2C_DATA_LEN, I2C_OP_RETRIES);
+    if(unlikely(ret)){
+        return -1;
+    }
+    
+    aos_msleep(100);
+    return 0;
+}
+
+static int drv_acc_bosch_bma253_self_test(i2c_dev_t* drv,int32_t* data)
+{
+    int ret,ret1;
+    char value = 0;
+    accel_data_t acc_data1;
+    accel_data_t acc_data2;
+    uint32_t range = g_bma253_range;
+    
+
+    ret = drv_acc_bosch_bma253_set_range(drv, ACC_RANGE_8G);
+    if(unlikely(ret)){
+        return -1;
+    }
+    
+    aos_msleep(100);
+
+    ret1 = 0;
+    ret1 |= drv_acc_bosch_bma253_self_test_axias(drv,en_bma253_test_x,&data[0]);
+    ret1 |= drv_acc_bosch_bma253_self_test_axias(drv,en_bma253_test_y,&data[1]);
+    ret1 |= drv_acc_bosch_bma253_self_test_axias(drv,en_bma253_test_z,&data[2]);
+    
+    aos_msleep(100);
+    ret = drv_acc_bosch_bma253_set_range(drv, range);
+    if(unlikely(ret)){
+        return -1;
+    }
+    
+    (void)drv_acc_bosch_bma253_self_test_disable(drv);
+
+    if(0 == ret1){
+        return 0;
+    }
+    else{
+        return -1;
+    }
+    
+}
+
 
 int drv_acc_bosch_bma253_init(void){
     int ret = 0;
