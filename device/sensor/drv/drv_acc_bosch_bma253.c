@@ -180,12 +180,18 @@
 #define BMA253_LOW_POWER_MODE_MSK          (0x40)
 #define BMA253_LOW_POWER_MODE_REG          BMA253_LOW_NOISE_CTRL_ADDR
 
+#define BMA253_SELF_TEST_AMP_HIGH(n)        ((n) | 0X10)
+#define BMA253_SELF_TEST_AMP_LOW(n)         ((n) | (~0X10))
+
 #define BMA253_SELF_TEST_SIGN_POSITIVE(n)   ((n) | 0X4)
 #define BMA253_SELF_TEST_SIGN_NEGTIVE(n)    ((n) & (~0X4))
 #define BMA253_SELF_TEST_X_AXIS(n)          (((n) & (~0X3)) | (0X1))
 #define BMA253_SELF_TEST_Y_AXIS(n)          (((n) & (~0X3)) | (0X2))
 #define BMA253_SELF_TEST_Z_AXIS(n)          (((n) & (~0X3)) | (0X3))
 #define BMA253_SELF_TEST_DISABLE(n)         ((n) & (~0X3))
+#define BMA253_SELF_TEST_MIN_X              (800)
+#define BMA253_SELF_TEST_MIN_Y              (800)
+#define BMA253_SELF_TEST_MIN_Z              (400)
 
 
 #define BMA253_DEFAULT_ODR_100HZ          (100)
@@ -558,7 +564,8 @@ static int drv_acc_bosch_bma253_self_test_axias(i2c_dev_t* drv,bma253_self_test_
             return -1;
         }
     }
-
+    
+    value = BMA253_SELF_TEST_AMP_HIGH(value);
     value = BMA253_SELF_TEST_SIGN_POSITIVE(value);
     
     ret = sensor_i2c_write(drv, BMA253_SELFTEST_ADDR, &value, I2C_DATA_LEN, I2C_OP_RETRIES);
@@ -591,7 +598,7 @@ static int drv_acc_bosch_bma253_self_test_axias(i2c_dev_t* drv,bma253_self_test_
         case en_bma253_test_x:{
             *result = acc_data1.data[0] - acc_data2.data[0];
             printf("x_axis(%d) = (%d) - (%d)\n",*result ,acc_data1.data[0],acc_data2.data[0]);
-            if(*result < 500){
+            if(*result < BMA253_SELF_TEST_MIN_X){
                 return -1;
             }
             break;
@@ -599,7 +606,7 @@ static int drv_acc_bosch_bma253_self_test_axias(i2c_dev_t* drv,bma253_self_test_
         case en_bma253_test_y:{
             *result = acc_data1.data[1] - acc_data2.data[1];
             printf("y_axis(%d) = (%d) - (%d)\n",*result ,acc_data1.data[1],acc_data2.data[1]);
-            if(*result < 500){
+            if(*result < BMA253_SELF_TEST_MIN_Y){
                 return -1;
             }
             break;
@@ -607,7 +614,7 @@ static int drv_acc_bosch_bma253_self_test_axias(i2c_dev_t* drv,bma253_self_test_
         case en_bma253_test_z:{
             *result = acc_data1.data[2] - acc_data2.data[2];
             printf("z_axis(%d) = (%d) - (%d)\n",*result ,acc_data1.data[2],acc_data2.data[2]);
-            if(*result < 500){
+            if(*result < BMA253_SELF_TEST_MIN_Z){
                 return -1;
             }
             break;
