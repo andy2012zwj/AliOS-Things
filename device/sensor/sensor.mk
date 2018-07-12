@@ -48,9 +48,11 @@ $(NAME)_SOURCES += \
         drv/drv_ps_liteon_ltr659.c \
         drv/drv_ps_liteon_ltr690.c \
         drv/drv_ps_liteon_ltr706.c \
-		drv/drv_acc_adi_adxl345.c \
-		drv/drv_acc_adi_adxl355.c \
-		drv/drv_acc_adi_adxl372.c
+        drv/drv_acc_adi_adxl345.c \
+        drv/drv_acc_adi_adxl355.c \
+        drv/drv_acc_adi_adxl372.c \
+        drv/drv_baro_rohm_bm1383a.c \
+        drv/drv_mag_rohm_bm1422a.c
 ##        drv/drv_gs_liteon_ltr91100.c
 ##        drv/drv_rgb_liteon_ltr381.c
         
@@ -61,7 +63,7 @@ GLOBAL_DEFINES      += AOS_SENSOR
 #GLOBAL_DEFINES      += AOS_SENSOR_TEMP_ADI_ADT7410
 #GLOBAL_DEFINES      += AOS_SENSOR_HUMI_BOSCH_BME280
 #GLOBAL_DEFINES      += AOS_SENSOR_ACC_BOSCH_BMA253
-GLOBAL_DEFINES      += AOS_SENSOR_BARO_BOSCH_BMP280
+#GLOBAL_DEFINES      += AOS_SENSOR_BARO_BOSCH_BMP280
 #GLOBAL_DEFINES      += AOS_SENSOR_BARO_IFX_DPS310
 
 #GLOBAL_DEFINES      += AOS_SENSOR_ACC_SUPPORT_STEP
@@ -126,4 +128,8 @@ GLOBAL_DEFINES      += AOS_SENSOR_BARO_BOSCH_BMP280
 #GLOBAL_DEFINES      += AOS_SENSOR_GYRO_ST_LSM6DSM
 #GLOBAL_DEFINES      += AOS_SENSOR_ACC_ST_LSM6DSR
 #GLOBAL_DEFINES      += AOS_SENSOR_GYRO_ST_LSM6DSR
+
+#GLOBAL_DEFINES      += AOS_SENSOR_BARO_ROHM_BM1383A
+#GLOBAL_DEFINES      += AOS_SENSOR_MAG_ROHM_BM1422A
+
 
