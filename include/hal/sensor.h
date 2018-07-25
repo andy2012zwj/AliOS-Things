@@ -301,8 +301,14 @@ typedef struct _sensor_node_t {
 typedef enum {
     ACC_RANGE_2G,
     ACC_RANGE_4G,
+    ACC_RANGE_6G,
     ACC_RANGE_8G,
+    ACC_RANGE_12G,
     ACC_RANGE_16G,
+    ACC_RANGE_24G,
+    ACC_RANGE_100G,
+    ACC_RANGE_200G,
+    ACC_RANGE_400G,
     ACC_RANGE_MAX
 } acc_range_e;
 

@@ -143,7 +143,7 @@ typedef enum {
 } lps22hb_bdu_e;
 
 i2c_dev_t lps22hb_ctx = {
-    .port = 1,
+    .port = 3,
     .config.address_width = 8,
     .config.freq = 400000,
     .config.dev_addr = LPS22HB_I2C_ADDR,

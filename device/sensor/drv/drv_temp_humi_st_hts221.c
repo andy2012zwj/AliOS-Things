@@ -110,6 +110,7 @@ typedef enum {
 } HTS221_bdu_e;
 
 i2c_dev_t HTS221_ctx = {
+	.port = 3,
     .config.dev_addr = HTS221_I2C_ADDR,
 };
 
@@ -456,7 +457,7 @@ static int drv_humi_st_hts221_read(void *buf, size_t len)
     humi = ( humi > 1000 ) ? 1000
             : ( humi < 0) ?  0:humi;
 
-    humi /= 10;
+    //humi /= 10;
 
     data[1] = humi >> 8;
     data[0] = humi & 0x0FF;

@@ -21,7 +21,24 @@ $(NAME)_SOURCES += \
         drv/drv_temp_humi_st_hts221.c \
         drv/drv_mag_st_lis3mdl.c \
         drv/drv_mag_temp_memsic_mmc3680kj.c \
-		drv/drv_temp_adi_adt7410.c
+		drv/drv_temp_adi_adt7410.c \
+		drv/drv_acc_gyro_st_lsm6ds3.c \
+        drv/drv_acc_gyro_st_lsm6ds3tr_c.c \
+        drv/drv_acc_gyro_st_lsm6dsm.c \
+        drv/drv_acc_gyro_st_lsm6dsoq.c \
+        drv/drv_acc_gyro_st_lsm6dsr.c \
+        drv/drv_acc_st_ais328dq.c \
+        drv/drv_acc_st_h3lis100dl.c \
+        drv/drv_acc_st_h3lis331dl.c \
+        drv/drv_acc_st_lis2dh12.c \
+        drv/drv_acc_st_lis2hh12.c \
+        drv/drv_acc_st_lis331hh.c \
+        drv/drv_acc_st_lis3dh.c \
+        drv/drv_baro_st_lps33hb.c \
+        drv/drv_baro_st_lps35hb.c \
+        drv/drv_gyro_st_i3g4250d.c \
+        drv/drv_gyro_st_l3gd20h.c \
+        drv/drv_mag_st_lis2mdl.c
 		
 
 GLOBAL_INCLUDES += .
@@ -49,3 +66,7 @@ GLOBAL_DEFINES      += AOS_SENSOR
 #GLOBAL_DEFINES      += AOS_SENSOR_HUMI_SENSIRION_SHTC1
 
 
+#GLOBAL_DEFINES      += AOS_SENSOR_PS_ST_LPS22HB
+#GLOBAL_DEFINES      += AOS_SENSOR_PS_ST_LPS33HW
+#GLOBAL_DEFINES      += AOS_SENSOR_TEMP_ST_HTS221
+#GLOBAL_DEFINES      += AOS_SENSOR_HUMI_ST_HTS221
