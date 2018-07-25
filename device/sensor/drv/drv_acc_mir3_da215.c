@@ -69,7 +69,7 @@
 #define DA215_SET_BITSLICE(regvar, bitname, val)        ((regvar & ~bitname##__MSK) | ((val<<bitname##__POS)&bitname##__MSK))
 
 i2c_dev_t da215_ctx = {
-    .port = 2,
+    .port = 3,
     .config.address_width = 8,
     .config.freq = 400000,
     .config.dev_addr = DA215_ADDR_TRANS(DA215_I2C_SLAVE_ADDR)

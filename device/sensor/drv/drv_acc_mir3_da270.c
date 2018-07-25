@@ -81,7 +81,7 @@
 #define DA270_SET_BITSLICE(regvar, bitname, val)        ((regvar & ~bitname##__MSK) | ((val<<bitname##__POS)&bitname##__MSK))
 
 i2c_dev_t da270_ctx = {
-    .port = 2,
+    .port = 3,
     .config.address_width = 8,
     .config.freq = 100000,
     .config.dev_addr = DA270_ADDR_TRANS(DA270_I2C_SLAVE_ADDR_HIGN)

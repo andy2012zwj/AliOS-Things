@@ -69,7 +69,7 @@
 #define DA380B_SET_BITSLICE(regvar, bitname, val)        ((regvar & ~bitname##__MSK) | ((val<<bitname##__POS)&bitname##__MSK))
 
 i2c_dev_t da380B_ctx = {
-    .port = 2,
+    .port = 3,
     .config.address_width = 8,
     .config.freq = 100000,
     .config.dev_addr = DA380B_ADDR_TRANS(DA380B_I2C_SLAVE_ADDR)

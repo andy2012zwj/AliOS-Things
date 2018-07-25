@@ -81,7 +81,7 @@
 #define DA217_SET_BITSLICE(regvar, bitname, val)        ((regvar & ~bitname##__MSK) | ((val<<bitname##__POS)&bitname##__MSK))
 
 i2c_dev_t da217_ctx = {
-    .port = 1,
+    .port = 3,
     .config.address_width = 8,
     .config.freq = 100000,
     .config.dev_addr = DA217_ADDR_TRANS(DA217_I2C_SLAVE_ADDR_HIGN)
