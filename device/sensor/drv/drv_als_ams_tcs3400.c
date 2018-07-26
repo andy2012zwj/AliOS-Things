@@ -542,19 +542,18 @@ static int tcs3400_get_lux_cct()
       tcs3400_chip.als_inf.cct = (uint16_t)cct;
     }
 
-    LOG("%s %s tcs3400_get_lux_cct lux is  %d, cct is %d \n", SENSOR_STR,__func__,temp_lux,cct);
+      return 0;
 }
 
 static int drv_als_ams_tcs3400_read(const void *buf, size_t len)
 {
-    LOG("%s %s drv_als_ams_tcs3400_read enter \n",SENSOR_STR, __func__);
-    int ret;
-    size_t size;
-    uint8_t temp_zero=0;
-    uint8_t status=0;
-    als_data_t* sensordata = (als_data_t*)buf;
+    int         ret;
+    size_t      size;
+    uint8_t     temp_zero  = 0;
+    uint8_t     status     = 0;
+    als_data_t *sensordata = (als_data_t *)buf;
 
-    if(buf == NULL){
+    if (buf == NULL) {
         return -1;
     }
     size = sizeof(als_data_t);
