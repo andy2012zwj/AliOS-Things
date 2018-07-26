@@ -68,11 +68,10 @@ $(NAME)_SOURCES += \
         drv/drv_mag_senodia_st350.c\
         drv/drv_acc_st_n2dm.c \
         drv/drv_acc_mag_st_lsm303agr.c \
-        drv/drv_acc_gyro_senodia_sh200q.c
-#        drv/drv_rgb_liteon_ltr381.c \
-#        drv/drv_gs_liteon_ltr91100.c
-        
-
+        drv/drv_acc_gyro_senodia_sh200q.c \
+        drv/drv_als_ams_tcs3400.c  \
+        drv/drv_als_ps_ams_tmd2725.c
+		
 
 GLOBAL_INCLUDES += .
 GLOBAL_DEFINES      += AOS_SENSOR
@@ -152,3 +151,6 @@ GLOBAL_DEFINES      += AOS_SENSOR
 #GLOBAL_DEFINES      += AOS_SENSOR_GYRO_BOSCH_BMI160
 
 
+#GLOBAL_DEFINES       += AOS_SENSOR_ALS_AMS_TCS3400
+#GLOBAL_DEFINES       += AOS_SENSOR_ALS_AMS_TMD2725
+#GLOBAL_DEFINES       += AOS_SENSOR_PS_AMS_TMD2725
