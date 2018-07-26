@@ -30,6 +30,7 @@ $(NAME)_SOURCES := uData-example.c
 
 $(NAME)_COMPONENTS := cli netmgr framework.common device.sensor uData
 
+GLOBAL_DEFINES += CONFIG_AOS_CLI
 GLOBAL_INCLUDES += .
 
 endif

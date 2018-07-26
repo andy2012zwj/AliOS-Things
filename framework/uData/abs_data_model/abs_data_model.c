@@ -266,10 +266,12 @@ int abs_data_open(uData_service_t *service)
     }
 
     interval = HZ_2_INTERVAL(service->config.odr);
+	#if 0
     ret = abs_data_timer_update(service->tag, interval);
     if (unlikely(ret)) {
         return -1;
     }
+	#endif
 
     /* chekc the device if it already exists here */
     index = abs_data_get_obj_index(service->tag);

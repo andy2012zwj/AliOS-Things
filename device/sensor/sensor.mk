@@ -21,8 +21,8 @@ $(NAME)_SOURCES += \
         drv/drv_temp_humi_st_hts221.c \
         drv/drv_mag_st_lis3mdl.c \
         drv/drv_mag_temp_memsic_mmc3680kj.c \
-	drv/drv_temp_adi_adt7410.c \
-	drv/drv_acc_gyro_st_lsm6ds3.c \
+        drv/drv_temp_adi_adt7410.c \
+        drv/drv_acc_gyro_st_lsm6ds3.c \
         drv/drv_acc_gyro_st_lsm6ds3tr_c.c \
         drv/drv_acc_gyro_st_lsm6dsm.c \
         drv/drv_acc_gyro_st_lsm6dsoq.c \
@@ -38,17 +38,17 @@ $(NAME)_SOURCES += \
         drv/drv_baro_st_lps35hb.c \
         drv/drv_gyro_st_i3g4250d.c \
         drv/drv_gyro_st_l3gd20h.c \
-        drv/drv_mag_st_lis2mdl.c
-	drv/drv_als_liteon_ltr303.c \
-	drv/drv_rgb_liteon_ltr381.c \
-	drv/drv_uv_liteon_ltr390.c \
-	drv/drv_als_ps_liteon_ltr507.c \
-	drv/drv_als_ps_liteon_ltr559.c \
-	drv/drv_als_liteon_ltr568.c 
+        drv/drv_mag_st_lis2mdl.c \
+        drv/drv_als_liteon_ltr303.c \
+        drv/drv_uv_liteon_ltr390.c \
+        drv/drv_als_ps_liteon_ltr507.c \
+        drv/drv_als_ps_liteon_ltr559.c \
+        drv/drv_als_liteon_ltr568.c \
         drv/drv_ps_liteon_ltr659.c \
         drv/drv_ps_liteon_ltr690.c \
-        drv/drv_ps_liteon_ltr706.c \
-        drv/drv_gs_liteon_ltr91100.c 
+        drv/drv_ps_liteon_ltr706.c
+##        drv/drv_gs_liteon_ltr91100.c
+##        drv/drv_rgb_liteon_ltr381.c
         
 		
 
@@ -57,7 +57,7 @@ GLOBAL_DEFINES      += AOS_SENSOR
 #GLOBAL_DEFINES      += AOS_SENSOR_TEMP_ADI_ADT7410
 #GLOBAL_DEFINES      += AOS_SENSOR_HUMI_BOSCH_BME280
 #GLOBAL_DEFINES      += AOS_SENSOR_ACC_BOSCH_BMA253
-#GLOBAL_DEFINES      += AOS_SENSOR_BARO_BOSCH_BMP280
+GLOBAL_DEFINES      += AOS_SENSOR_BARO_BOSCH_BMP280
 #GLOBAL_DEFINES      += AOS_SENSOR_ACC_ST_LSM6DSL
 #GLOBAL_DEFINES      += AOS_SENSOR_GYRO_ST_LSM6DSL
 #GLOBAL_DEFINES      += AOS_SENSOR_BARO_ST_LPS22HB

@@ -46,23 +46,29 @@
 
 #define UDATA_SHOW_UINT_1(TYPE,TIME,DATA1) \
 do{\
+    UDATA_PRINT(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"); \
     UDATA_PRINT("uData_application::::::::::::::type = (%d)\n", (TYPE)); \
     UDATA_PRINT("uData_application::::::::::::::data = (%d)\n", (DATA1)); \
     UDATA_PRINT("uData_application:::::::::timestamp = (%d)\n", (uint32_t)(TIME)); \
+	UDATA_PRINT("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"); \
 }while(0);
 
 #define UDATA_SHOW_UINT_3(TYPE,TIME,DATA1,DATA2,DATA3) \
 do{\
+    UDATA_PRINT(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"); \
     UDATA_PRINT("uData_application::::::::::::::type = (%d)\n", (TYPE)); \
     UDATA_PRINT("uData_application::::::::::::::data = (%d) (%d) (%d)\n", (DATA1),(DATA2),(DATA3)); \
     UDATA_PRINT("uData_application:::::::::timestamp = (%d)\n", (uint32_t)(TIME)); \
+	UDATA_PRINT("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"); \
 }while(0);
 
 #define UDATA_SHOW_FLOAT_3(TYPE,TIME,DATA1,DATA2,DATA3) \
 do{\
+    UDATA_PRINT(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"); \
     UDATA_PRINT("uData_application::::::::::::::type = (%d)\n", (TYPE)); \
     UDATA_PRINT("uData_application::::::::::::::data = (%f) (%f) (%f)\n", (DATA1),(DATA2),(DATA3)); \
     UDATA_PRINT("uData_application:::::::::timestamp = (%d)\n", (uint32_t)(TIME)); \
+	UDATA_PRINT("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"); \
 }while(0);
 
 #ifdef DATA_TO_CLOUD
@@ -329,13 +335,15 @@ int sensor_self_test(void)
 }
 
 
+uint32_t  udata_sub_type = UDATA_SERVICE_BARO;
+
 int udata_sample(void)
 {
     int ret = 0;
 
     aos_register_event_filter(EV_UDATA, uData_report_demo, NULL);
 
-    ret = uData_subscribe(UDATA_SERVICE_BARO);
+    ret = uData_subscribe(udata_sub_type);
     if (ret != 0) {
         LOG("%s %s %s %d\n", uDATA_STR, __func__, ERROR_LINE, __LINE__);
         return -1;
@@ -345,7 +353,27 @@ int udata_sample(void)
 }
 
 
+#if (defined (CONFIG_AOS_CLI))
 
+extern void  abs_sensor_read(sensor_tag_e tag);
+
+static void handle_get_sensor_data_cmd(char *pwbuf, int blen, int argc, char **argv)
+{
+    //int tag = argc > 1 ? ((*(argv[1])) - 48): TAG_DEV_SENSOR_NUM_MAX;
+	uint32_t tag = udata_sub_type;
+    if(tag >= TAG_DEV_SENSOR_NUM_MAX){
+       printf("tag = %d fail\n",tag);
+       return;
+    }
+
+    abs_sensor_read(tag);
+}
+static struct cli_command sensorcmd = {
+    .name = "sensor",
+    .help = "get sensor data",
+    .function = handle_get_sensor_data_cmd
+};
+#endif
 int application_start(int argc, char **argv)
 {
 #ifdef DATA_TO_CLOUD
@@ -376,6 +404,7 @@ int application_start(int argc, char **argv)
     aos_task_new("netmgr", start_netmgr, NULL, 4096);
 
 #endif
+    aos_cli_register_command(&sensorcmd);
     udata_sample();
 
 

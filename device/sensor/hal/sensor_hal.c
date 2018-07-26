@@ -468,7 +468,7 @@ int sensor_init(void){
     drv_baro_st_lps22hb_init();
 #endif /* AOS_SENSOR_PS_ST_LPS22HB */
 
-
+//drv_als_liteon_ltr303_init();
 
 
     ret = sensor_hal_register();
