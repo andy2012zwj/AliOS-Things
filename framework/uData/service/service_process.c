@@ -492,7 +492,7 @@ int udata_hall_service_init(void)
     return ret;
 }
 
-#ifdef AOS_UDATA_SERVICE_HEART
+#ifdef AOS_UDATA_SERVICE_HR
 
 static int udata_heart_service_ioctl_cb(udata_type_e type, sensor_tag_e tag)
 {
@@ -544,7 +544,7 @@ int udata_heart_service_init(void)
 {
     int ret = 0;
 
-#ifdef AOS_UDATA_SERVICE_HEART
+#ifdef AOS_UDATA_SERVICE_HR
     ret = udata_heart_service_register();
 #endif
 
