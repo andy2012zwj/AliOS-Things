@@ -30,8 +30,8 @@ static size_t udata_acc_service_process_cb(sensor_tag_e tag, void *pdata)
     accel_data_t *acc =  (accel_data_t *)pdata;
     size_t len = sizeof(accel_data_t);
 
-    LOG("%s udata_acc_service_cb = (%d), (%d,%d,%d), (%d)\n", uDATA_STR, tag, acc->data[0], acc->data[1], acc->data[2],
-        acc->timestamp);
+    /*LOG("%s udata_acc_service_cb = (%d), (%d,%d,%d), (%d)\n", uDATA_STR, tag, acc->data[0], acc->data[1], acc->data[2],
+        acc->timestamp);*/
     return len;
 }
 
@@ -492,7 +492,7 @@ int udata_hall_service_init(void)
     return ret;
 }
 
-#ifdef AOS_UDATA_SERVICE_HEART
+#ifdef AOS_UDATA_SERVICE_HR
 
 static int udata_heart_service_ioctl_cb(udata_type_e type, sensor_tag_e tag)
 {
@@ -544,7 +544,7 @@ int udata_heart_service_init(void)
 {
     int ret = 0;
 
-#ifdef AOS_UDATA_SERVICE_HEART
+#ifdef AOS_UDATA_SERVICE_HR
     ret = udata_heart_service_register();
 #endif
 
