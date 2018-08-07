@@ -133,7 +133,7 @@
 #define BME280_I2C_SLAVE_ADDR_LOW           (0X76)
 #define BME280_I2C_SLAVE_ADDR_HIGN          (0X77)
 
-#define BME280_HUMI_UNIT_RATIO_10           (100)
+#define BME280_HUMI_UNIT_RATIO_10           (10)
 #define BME280_HUMI_UNIT_RATIO_1024         (1024)
 
 #define BME280_DEFAULT_ODR_1HZ              (1)
