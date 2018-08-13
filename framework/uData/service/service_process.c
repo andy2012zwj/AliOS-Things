@@ -89,8 +89,8 @@ static size_t udata_gyro_service_process_cb(sensor_tag_e tag, void *pdata)
     gyro_data_t *gyro =  (gyro_data_t *)pdata;
     size_t len = sizeof(gyro_data_t);
 
-    LOG("%s udata_gyro_service_cb = (%d), (%d,%d,%d), (%d)\n", uDATA_STR, tag, gyro->data[0], gyro->data[1], gyro->data[2],
-        gyro->timestamp);
+    /*LOG("%s udata_gyro_service_cb = (%d), (%d,%d,%d), (%d)\n", uDATA_STR, tag, gyro->data[0], gyro->data[1], gyro->data[2],
+        gyro->timestamp);*/
     return len;
 }
 
@@ -105,7 +105,7 @@ static int udata_gyro_service_register(void)
     gyro->type = UDATA_SERVICE_GYRO;
     gyro->tag = TAG_DEV_GYRO;
     gyro->config.id = SENSOR_IOCTL_ODR_SET;
-    gyro->config.odr = 10; /* 10Hz */
+    gyro->config.odr = 100; /* 10Hz */
     gyro->config.range = 0; /* no need here, set by the default value in the driver layer */
     gyro->service_process_cb = udata_gyro_service_process_cb;
     gyro->service_ioctl_cb = udata_gyro_service_ioctl_cb;

@@ -112,7 +112,7 @@ double m_result[MATRIX_SIZE];
 sensor_clib_para g_sensor_clib_para;
 
 
-uint32_t  udata_sub_type = UDATA_SERVICE_ACC;
+uint32_t  udata_sub_type = UDATA_SERVICE_MAG;
 
 void Calc_Process(double radius);
 void DispMatrix(void);
@@ -263,7 +263,7 @@ static struct cli_command ncmd = {
 #ifdef TEST_GYRO
 
 #define  GYRO_COUNT_THRESHOLD        (2000)
-#define  GYRO_COUNT_NUM              (20000)
+#define  GYRO_COUNT_NUM              (2000)
 
 #define  GYRO_CALC_SCALE             (1000000)
 
@@ -307,12 +307,23 @@ void gyro_filter(uint32_t time,int data0, int data1, int data2)
 int64_t   gyro_angle[3] = {0,0,0};
 uint32_t  gyro_time = 0;
 uint32_t  gyro_flag = GYRO_CALC_IDLE;
+int64_t   g_angle_save = 360000;
 
 
 
 void gyro_data_show()
 {
+    int64_t angle = 0;
+    angle = gyro_angle[0]*gyro_angle[0] + gyro_angle[1]*gyro_angle[1] + gyro_angle[2]*gyro_angle[2] ;
+    angle = sqrt(angle);
     printf("gyro_angle = %d  %d  %d\n",(int32_t)gyro_angle[0] ,(int32_t)gyro_angle[1] ,(int32_t)gyro_angle[2] );
+    g_angle_save = angle;
+    UDATA_SHOW_UINT_3(UDATA_SERVICE_GYRO,0,(uint32_t)angle,0,0);
+}
+
+void gyro_data_read()
+{
+    UDATA_SHOW_UINT_3(UDATA_SERVICE_GYRO,0,(uint32_t)g_angle_save,0,0);
 }
 
 void gyro_calc_init()
@@ -323,7 +334,6 @@ void gyro_calc_init()
 
     gyro_time = 0;
     gyro_flag = GYRO_CALC_IDLE;
-    gyro_data_show();
 }
 
 void gyro_calc(uint32_t time,int data0, int data1, int data2)
@@ -338,12 +348,12 @@ void gyro_calc(uint32_t time,int data0, int data1, int data2)
     }
     else if(GYRO_CALC_SHOW == gyro_flag){
         gyro_flag = GYRO_CALC_PROC;
-        gyro_data_show();
+        //gyro_data_show();
     }
     else if(GYRO_CALC_START == gyro_flag){
         gyro_time = time;
         gyro_flag = GYRO_CALC_PROC;
-        gyro_data_show();
+        //gyro_data_show();
         return;
     }
 
@@ -356,7 +366,6 @@ void gyro_calc(uint32_t time,int data0, int data1, int data2)
 
 
 #endif
-
 
 
 
@@ -390,7 +399,6 @@ void uData_report_demo(input_event_t *event, void *priv_data)
                         g_acc_clib_flag = 1;
                         printf("caliCalc_Process_test_sum end == %d\n",cali_test_sum);
                     }
-                
                 }
                 else{
 
@@ -404,7 +412,7 @@ void uData_report_demo(input_event_t *event, void *priv_data)
                                 
                     UDATA_SHOW_UINT_3(buf.type, (uint32_t)acc->timestamp, acc->data[0], acc->data[1], acc->data[2]);
                     acc->data[0] = acc->data[0]*acc->data[0] + acc->data[1]*acc->data[1] + acc->data[2]*acc->data[2];
-                    printf("output  == %f\n",sqrt(acc->data[0]));
+                    printf("output  == %f\n",sqrt((double)(acc->data[0])));
                 }
 
                 break;
@@ -413,7 +421,16 @@ void uData_report_demo(input_event_t *event, void *priv_data)
 
             case UDATA_SERVICE_MAG: {
                 mag_data_t *mag = (mag_data_t *)buf.payload;
+                int mag_value[3] = {0};
+                double value = 0.0;
+                
+                mag_value[0] = mag->data[0];
+                mag_value[1] = mag->data[1];
+                mag_value[2] = mag->data[2];
+                mag_value[0] = (mag_value[0] * mag_value[0]) + (mag_value[1]*mag_value[1]) + (mag_value[2]*mag_value[2]);
                 UDATA_SHOW_UINT_3(buf.type, (uint32_t)mag->timestamp, mag->data[0], mag->data[1], mag->data[2]);
+
+                printf("total mag = %f\n",sqrt((double)mag_value[0]));
                 break;
             }
 
@@ -565,6 +582,11 @@ static void handle_get_sensor_data_cmd(char *pwbuf, int blen, int argc, char **a
        printf("tag = %d fail\n",tag);
        return;
     }
+
+    if(tag == TAG_DEV_GYRO){
+        gyro_data_read();
+        return;
+    }
     test_start_gyro++;
 
     abs_sensor_read(tag);
@@ -609,6 +631,7 @@ void handle_gyro_test_cmd(char *pwbuf, int blen, int argc, char **argv)
         gyro_calc_init();
     } 
     else if (strcmp(cmd, "start") == 0) {
+        gyro_calc_init();
         gyro_flag = GYRO_CALC_START;
     }
     else if (strcmp(cmd, "stop") == 0) {

@@ -101,7 +101,9 @@ static void abs_data_post_timer_expried_dev(uint64_t timestamp)
     uint8_t i = 0;
     for (i = 0; i < abs_data_cnt; i++) {
         if ((timestamp - g_abs_data_db[i]->cur_timestamp) >= (g_abs_data_db[i]->interval)) {
-
+            if(TAG_DEV_GYRO != g_abs_data_db[i]->tag){
+                continue;
+            }
             //aos_post_event(EV_UDATA, CODE_UDATA_DEV_READ, (g_abs_data_db[i]->tag));
             abs_sensor_read(g_abs_data_db[i]->tag);
             /* update the timestamp of triggered sensor here for the next timer hadler */
@@ -266,12 +268,12 @@ int abs_data_open(uData_service_t *service)
     }
 
     interval = HZ_2_INTERVAL(service->config.odr);
-	#if 0
+#if 1
     ret = abs_data_timer_update(service->tag, interval);
     if (unlikely(ret)) {
         return -1;
     }
-	#endif
+#endif
 
     /* chekc the device if it already exists here */
     index = abs_data_get_obj_index(service->tag);
@@ -375,7 +377,7 @@ int abs_data_read(sensor_tag_e tag, void *pdata, uint32_t nbyte)
         return -1;
     }
 
-    LOG("%s %s successfully \n", uDATA_STR, __func__);
+    //LOG("%s %s successfully \n", uDATA_STR, __func__);
     return (int)size;
 }
 

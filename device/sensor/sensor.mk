@@ -47,7 +47,10 @@ $(NAME)_SOURCES += \
         drv/drv_als_liteon_ltr568.c \
         drv/drv_ps_liteon_ltr659.c \
         drv/drv_ps_liteon_ltr690.c \
-        drv/drv_ps_liteon_ltr706.c
+        drv/drv_ps_liteon_ltr706.c \
+		drv/drv_acc_adi_adxl345.c \
+		drv/drv_acc_adi_adxl355.c \
+		drv/drv_acc_adi_adxl372.c
 ##        drv/drv_gs_liteon_ltr91100.c
 ##        drv/drv_rgb_liteon_ltr381.c
         

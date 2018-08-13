@@ -30,9 +30,9 @@
 #define L3GD20H_GYRO_OUT_TEMP         		0x26
 #define L3GD20H_GYRO_STATUS         		0x27
 #define L3GD20H_GYRO_OUTX_L          		0x28
-#define L3GD20H_GYRO_OUTX_H        	  		0x29
 #define L3GD20H_GYRO_OUTY_L        		  	0x2A
 #define L3GD20H_GYRO_OUTY_H          		0x2B
+#define L3GD20H_GYRO_OUTX_H        	  		0x29
 #define L3GD20H_GYRO_OUTZ_L          		0x2C
 #define L3GD20H_GYRO_OUTZ_H          		0x2D
 #define L3GD20H_GYRO_LOW_ODR        	  	0x39
@@ -64,9 +64,9 @@
 #define L3GD20H_GYRO_RANGE_MSK              (0x30)
 #define L3GD20H_GYRO_RANGE_POS              (4)
 
-#define L3GD20H_GYRO_SENSITIVITY_245DPS     8750
-#define L3GD20H_GYRO_SENSITIVITY_500DPS     1750
-#define L3GD20H_GYRO_SENSITIVITY_2000DPS    7000
+#define L3GD20H_GYRO_SENSITIVITY_245DPS     87500
+#define L3GD20H_GYRO_SENSITIVITY_500DPS     17500
+#define L3GD20H_GYRO_SENSITIVITY_2000DPS    70000
 
 #define L3GD20H_GYRO_MUL					1000
 
