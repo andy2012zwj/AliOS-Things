@@ -52,7 +52,12 @@ $(NAME)_SOURCES += \
         drv/drv_acc_adi_adxl355.c \
         drv/drv_acc_adi_adxl372.c \
         drv/drv_baro_rohm_bm1383a.c \
-        drv/drv_mag_rohm_bm1422a.c
+        drv/drv_mag_rohm_bm1422a.c \
+		drv/drv_acc_bosch_bma4xy.c \
+		drv/drv_acc_gyro_bosch_bmi160.c \
+		drv/drv_acc_gyro_bosch_bmi260.c \
+		drv/drv_baro_bosch_bmp38x.c
+		
 ##        drv/drv_gs_liteon_ltr91100.c
 ##        drv/drv_rgb_liteon_ltr381.c
         
@@ -131,5 +136,8 @@ GLOBAL_DEFINES      += AOS_SENSOR
 
 #GLOBAL_DEFINES      += AOS_SENSOR_BARO_ROHM_BM1383A
 #GLOBAL_DEFINES      += AOS_SENSOR_MAG_ROHM_BM1422A
+
+#GLOBAL_DEFINES      += AOS_SENSOR_ACC_BOSCH_BMI160
+#GLOBAL_DEFINES      += AOS_SENSOR_GYRO_BOSCH_BMI160
 
 
