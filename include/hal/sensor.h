@@ -57,6 +57,7 @@ typedef enum {
 #define dev_hall_path    "/dev/hall"
 #define dev_hr_path      "/dev/hr"
 #define dev_gps_path     "/dev/gps"
+#define dev_ir_path      "/dev/ir"
 
 #define sensor_node_path "/dev/sensor"
 #define gps_node_path    "/dev/nodegps"
