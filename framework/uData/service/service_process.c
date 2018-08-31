@@ -726,6 +726,120 @@ int udata_force_service_init(void)
 }
 
 
+#ifdef AOS_UDATA_SERVICE_TVOC
+static int udata_tvoc_service_ioctl_cb(udata_type_e type, sensor_tag_e tag)
+{
+    (void)type;
+    (void)tag;
+
+    return 0;
+}
+
+static size_t udata_tvoc_service_process_cb(sensor_tag_e tag, void *pdata)
+{
+    tvoc_data_t *tvoc =  (tvoc_data_t *)pdata;
+    size_t len = sizeof(tvoc_data_t);
+
+    LOG("%s udata_ps_service_cb = (%d), (%d), (%d)\n", uDATA_STR, tag, tvoc->tvoc, tvoc->timestamp);
+    return len;
+}
+
+static int udata_tvoc_service_register(void)
+{
+    int ret = 0;
+    uData_service_t *ps;
+    ps = (uData_service_t *)malloc(sizeof(uData_service_t));
+    if (ps == NULL) {
+        return -1;
+    }
+    ps->type = UDATA_SERVICE_TVOC;
+    ps->tag = TAG_DEV_TVOC;
+    ps->config.id = SENSOR_IOCTL_ODR_SET;
+    ps->config.odr = 1; /* 1Hz */
+    ps->config.range = 0; /* no need here, set by the default value in the driver layer */
+    ps->service_process_cb = udata_tvoc_service_process_cb;
+    ps->service_ioctl_cb = udata_tvoc_service_ioctl_cb;
+    ret = uData_service_register(ps);
+    if (unlikely(ret)) {
+        free(ps);
+        LOG("%s %s %s %d\n",  uDATA_STR, __func__, ERROR_LINE, __LINE__);
+        return -1;
+    }
+    free(ps);
+    LOG("%s %s successfully\n", uDATA_STR, __func__);
+    return 0;
+}
+
+#endif
+int udata_tvoc_service_init(void)
+{
+    int ret = 0;
+
+#ifdef AOS_UDATA_SERVICE_TVOC
+    ret = udata_tvoc_service_register();
+#endif
+
+    return ret;
+}
+
+
+#ifdef AOS_UDATA_SERVICE_RGB
+static int udata_rgb_service_ioctl_cb(udata_type_e type, sensor_tag_e tag)
+{
+    (void)type;
+    (void)tag;
+
+    return 0;
+}
+
+static size_t udata_rgb_service_process_cb(sensor_tag_e tag, void *pdata)
+{
+    rgb_data_t *rgb =  (rgb_data_t *)pdata;
+    size_t len = sizeof(rgb_data_t);
+
+    LOG("%s udata_rgb_service_cb = (%d), (%d,%d,%d), (%d)\n", uDATA_STR, tag, rgb->data[0], rgb->data[1], rgb->data[2],
+        rgb->timestamp);
+    return len;
+}
+
+
+static int udata_rgb_service_register(void)
+{
+    int ret = 0;
+    uData_service_t *service;
+    service = (uData_service_t *)malloc(sizeof(uData_service_t));
+    if (service == NULL) {
+        return -1;
+    }
+    service->type = UDATA_SERVICE_RGB;
+    service->tag = TAG_DEV_RGB;
+    service->config.id = SENSOR_IOCTL_ODR_SET;
+    service->config.odr = 10; /* 10Hz */
+    service->config.range = 0; /* no need here, set by the default value in the driver layer */
+    service->service_process_cb = udata_rgb_service_process_cb;
+    service->service_ioctl_cb = udata_rgb_service_ioctl_cb;
+    ret = uData_service_register(service);
+    if (unlikely(ret)) {
+        free(service);
+        LOG("%s %s %s %d\n",  uDATA_STR, __func__, ERROR_LINE, __LINE__);
+        return -1;
+    }
+    free(service);
+    LOG("%s %s successfully\n", uDATA_STR, __func__);
+    return 0;
+}
+
+#endif
+int udata_rgb_service_init(void)
+{
+    int ret = 0;
+
+#ifdef AOS_UDATA_SERVICE_RGB
+    ret = udata_rgb_service_register();
+#endif
+
+    return ret;
+}
 
 #ifdef AOS_UDATA_SERVICE_GPS
 
@@ -812,6 +926,9 @@ udata_service_info g_udata_service[UDATA_MAX_CNT] = {
     {TAG_DEV_HALL,              UDATA_SERVICE_HALL,        udata_hall_service_init},
     {TAG_DEV_HR,                UDATA_SERVICE_HR,          udata_heart_service_init},
     {TAG_DEV_FORCE,             UDATA_SERVICE_FORCE,       udata_force_service_init},
+    {TAG_DEV_RGB,               UDATA_SERVICE_RGB,         udata_rgb_service_init},
+    {TAG_DEV_TVOC,              UDATA_SERVICE_TVOC,        udata_tvoc_service_init},
+    
     {TAG_DEV_SENSOR_NUM_MAX,    UDATA_SERVICE_PEDOMETER,   NULL},
     {TAG_DEV_SENSOR_NUM_MAX,    UDATA_SERVICE_PDR,         NULL},
     {TAG_DEV_SENSOR_NUM_MAX,    UDATA_SERVICE_VDR,         NULL},

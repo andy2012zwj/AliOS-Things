@@ -561,11 +561,11 @@ int sensor_init(void){
 #endif /* AOS_SENSOR_GYRO_ST_LSM6DSR */
 
 #ifdef AOS_SENSOR_ACC_BOSCH_BMI160
-	drv_acc_bosch_bmi160_init();
+    drv_acc_bosch_bmi160_init();
 #endif
 
 #ifdef AOS_SENSOR_GYRO_BOSCH_BMI160
-	drv_gyro_bosch_bmi160_init();
+    drv_gyro_bosch_bmi160_init();
 #endif
     ret = sensor_hal_register();
     if(ret != 0){

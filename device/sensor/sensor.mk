@@ -32,6 +32,7 @@ $(NAME)_SOURCES += \
         drv/drv_acc_st_h3lis100dl.c \
         drv/drv_acc_st_h3lis331dl.c \
         drv/drv_acc_st_lis2dh12.c \
+        drv/drv_acc_st_lis2dw12.c \
         drv/drv_acc_st_lis2hh12.c \
         drv/drv_acc_st_lis331hh.c \
         drv/drv_acc_st_lis3dh.c \
@@ -53,15 +54,25 @@ $(NAME)_SOURCES += \
         drv/drv_acc_adi_adxl372.c \
         drv/drv_baro_rohm_bm1383a.c \
         drv/drv_mag_rohm_bm1422a.c \
-		drv/drv_acc_bosch_bma4xy.c \
-		drv/drv_acc_gyro_bosch_bmi160.c \
-		drv/drv_acc_gyro_bosch_bmi260.c \
-		drv/drv_baro_bosch_bmp38x.c
-		
-##        drv/drv_gs_liteon_ltr91100.c
-##        drv/drv_rgb_liteon_ltr381.c
+        drv/drv_temp_humi_sensirion_sht3x.c \
+        drv/drv_ecg_adi_adpd188gg.c \
+        drv/drv_ecg_adi_adpd1080.c \
+        drv/drv_mag_akm_ak09918.c \
+        drv/drv_acc_gyro_bosch_bmi160.c \
+        drv/drv_acc_gyro_bosch_bmi260.c \
+        drv/drv_acc_bosch_bma4xy.c \
+        drv/drv_baro_bosch_bmp38x.c \
+        drv/drv_voc_ams_ccs811.c \
+        drv/drv_temp_humi_ams_ens210.c \
+        drv/drv_tvoc_sensirion_sgp30.c \
+        drv/drv_mag_senodia_st350.c\
+        drv/drv_acc_st_n2dm.c \
+        drv/drv_acc_mag_st_lsm303agr.c \
+        drv/drv_acc_gyro_senodia_sh200q.c
+#        drv/drv_rgb_liteon_ltr381.c \
+#        drv/drv_gs_liteon_ltr91100.c
         
-		
+
 
 GLOBAL_INCLUDES += .
 GLOBAL_DEFINES      += AOS_SENSOR
