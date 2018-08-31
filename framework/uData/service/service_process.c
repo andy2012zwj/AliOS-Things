@@ -683,7 +683,7 @@ static size_t udata_force_service_process_cb(sensor_tag_e tag, void *pdata)
     force_data_t *force =  (force_data_t *)pdata;
     size_t len = sizeof(force_data_t);
 
-    LOG("%s udata_ps_service_cb = (%d), (%d), (%d)\n", uDATA_STR, tag, force->force, force->timestamp);
+    LOG("%s udata_ps_service_cb = (%d), (%d), (%d)\n", uDATA_STR, tag, force->f, force->timestamp);
     return len;
 }
 

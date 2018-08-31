@@ -37,6 +37,8 @@ sensor_node_t g_sensor_node[] = {
     { TAG_DEV_HUMI,   dev_humi_path,  0},
     { TAG_DEV_HALL,   dev_hall_path,  0},
     { TAG_DEV_HR,     dev_hr_path,    0},
+    { TAG_DEV_FORCE,  dev_force_path, 0},
+    { TAG_DEV_IR,     dev_ir_path,    0},
     { TAG_DEV_GPS,    dev_gps_path,   0},
 };
 
