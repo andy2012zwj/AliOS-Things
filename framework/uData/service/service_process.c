@@ -725,6 +725,61 @@ int udata_force_service_init(void)
     return ret;
 }
 
+#ifdef AOS_UDATA_SERVICE_IR
+static int udata_ir_service_ioctl_cb(udata_type_e type, sensor_tag_e tag)
+{
+    (void)type;
+    (void)tag;
+
+    return 0;
+}
+
+static size_t udata_ir_service_process_cb(sensor_tag_e tag, void *pdata)
+{
+    ir_data_t *ir_data =  (ir_data_t *)pdata;
+    size_t len = sizeof(ir_data_t);
+
+    LOG("%s udata_ps_service_cb = (%d), (%d), (%d)\n", uDATA_STR, tag, ir_data->ir, ir_data->timestamp);
+    return len;
+}
+
+static int udata_ir_service_register(void)
+{
+    int ret = 0;
+    uData_service_t *ps;
+    ps = (uData_service_t *)malloc(sizeof(uData_service_t));
+    if (ps == NULL) {
+        return -1;
+    }
+    ps->type = UDATA_SERVICE_IR;
+    ps->tag = TAG_DEV_IR;
+    ps->config.id = SENSOR_IOCTL_ODR_SET;
+    ps->config.odr = 1; /* 1Hz */
+    ps->config.range = 0; /* no need here, set by the default value in the driver layer */
+    ps->service_process_cb = udata_ir_service_process_cb;
+    ps->service_ioctl_cb = udata_ir_service_ioctl_cb;
+    ret = uData_service_register(ps);
+    if (unlikely(ret)) {
+        free(ps);
+        LOG("%s %s %s %d\n",  uDATA_STR, __func__, ERROR_LINE, __LINE__);
+        return -1;
+    }
+    free(ps);
+    LOG("%s %s successfully\n", uDATA_STR, __func__);
+    return 0;
+}
+
+#endif
+int udata_ir_service_init(void)
+{
+    int ret = 0;
+
+#ifdef AOS_UDATA_SERVICE_IR
+    ret = udata_ir_service_register();
+#endif
+
+    return ret;
+}
 
 
 #ifdef AOS_UDATA_SERVICE_GPS
@@ -812,6 +867,7 @@ udata_service_info g_udata_service[UDATA_MAX_CNT] = {
     {TAG_DEV_HALL,              UDATA_SERVICE_HALL,        udata_hall_service_init},
     {TAG_DEV_HR,                UDATA_SERVICE_HR,          udata_heart_service_init},
     {TAG_DEV_FORCE,             UDATA_SERVICE_FORCE,       udata_force_service_init},
+    {TAG_DEV_IR,                UDATA_SERVICE_IR,          udata_ir_service_init},
     {TAG_DEV_SENSOR_NUM_MAX,    UDATA_SERVICE_PEDOMETER,   NULL},
     {TAG_DEV_SENSOR_NUM_MAX,    UDATA_SERVICE_PDR,         NULL},
     {TAG_DEV_SENSOR_NUM_MAX,    UDATA_SERVICE_VDR,         NULL},

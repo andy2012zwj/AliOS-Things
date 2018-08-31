@@ -83,6 +83,7 @@ typedef enum {
     TAG_DEV_HALL,       /* HALL */
     TAG_DEV_HR,         /* Heart Rate */
     TAG_DEV_FORCE,      /* Force sensor */
+    TAG_DEV_IR,         /* IR sensor */
     TAG_DEV_GPS,
     TAG_DEV_SENSOR_NUM_MAX,
 } sensor_tag_e;
