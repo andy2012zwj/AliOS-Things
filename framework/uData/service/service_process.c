@@ -739,7 +739,7 @@ static size_t udata_ir_service_process_cb(sensor_tag_e tag, void *pdata)
     ir_data_t *ir_data =  (ir_data_t *)pdata;
     size_t len = sizeof(ir_data_t);
 
-    LOG("%s udata_ps_service_cb = (%d), (%d), (%d)\n", uDATA_STR, tag, ir_data->ir, ir_data->timestamp);
+    LOG("%s udata_ir_service_cb = (%d), (%d), (%d)\n", uDATA_STR, tag, ir_data->ir, ir_data->timestamp);
     return len;
 }
 

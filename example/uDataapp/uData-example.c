@@ -285,6 +285,11 @@ void uData_report_demo(input_event_t *event, void *priv_data)
                 UDATA_SHOW_UINT_1(buf.type, force->timestamp, force->f);
                 break;
             }
+            case UDATA_SERVICE_IR: {
+                ir_data_t *ir = (ir_data_t *)buf.payload;
+                UDATA_SHOW_UINT_1(buf.type, ir->timestamp, ir->ir);
+                break;
+            }
 
             case UDATA_SERVICE_GPS: {
                 gps_data_t *gps = (gps_data_t *)buf.payload;
