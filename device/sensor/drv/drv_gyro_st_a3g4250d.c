@@ -13,9 +13,7 @@
 #include <vfs_register.h>
 #include <hal/base.h>
 #include "common.h"
-#include "sensor.h"
-#include "sensor_drv_api.h"
-#include "sensor_hal.h"
+#include "hal/sensor.h"
 
 
 #define A3G4250D_I2C_ADDR1                	(0x68)
